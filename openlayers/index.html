@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - Welcome</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="./theme/index.css">
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/"><img src="/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v7.3.0 (latest)</a>
+              <a class="dropdown-item" href="/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div id='map'></div>
+<div class='container'>
+  <blockquote id='tagline' class='text-end plain'>
+    <p>A high-performance, feature-packed library for all your mapping needs.</p>
+  </blockquote>
+  <div class='row' id='news'>
+    <div class='col-sm-12'>
+      <h1 class='topic'><i class='fa fa-rss'></i> Latest</h1>
+      <p><strong>OpenLayers <a href="/download/">v7.3.0</a> is here!</strong> Check out the <a href="/doc/">docs</a> and the <a href="/en/latest/examples/">examples</a> to get started. The full distribution can be downloaded from the <a href="/download/">release page</a>.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <h1 class='topic col-sm-12'>Overview</h1>
+  </div>
+  <div class='row'>
+    <div class='col-sm-12'>
+      <p>OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds. It is completely free, Open Source JavaScript, released under the 2-clause BSD License (also known as the FreeBSD).</p>
+    </div>
+  </div>
+  <div class='row'>
+    <h1 class='topic col-sm-12'>Features</h1>
+  </div>
+  <div class='row'>
+    <div class='col-sm-6'>
+      <h3>Tiled Layers</h3>
+      <img src='/theme/img/tiled-layers.png' width="102" height="84" class='thumb' alt="tiled layers">
+      <p>Pull tiles from OSM, Bing, MapBox, Stamen, and any other XYZ source you can find.  OGC mapping services and untiled layers also supported.</p>
+    </div>
+    <div class='col-sm-6'>
+      <h3>Vector Layers</h3>
+      <img src='/theme/img/vector-layers.png' width="102" height="84" class='thumb' alt="vector layers">
+      <p>Render vector data from GeoJSON, TopoJSON, KML, GML, Mapbox vector tiles, and other formats.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-sm-6'>
+      <h3>Cutting Edge, Fast &amp; Mobile Ready</h3>
+      <img src='/theme/img/timeline.png' width="102" height="84" class='thumb' alt="mobile ready">
+      <p>Leverages Canvas 2D, WebGL, and all the latest greatness from HTML5.  Mobile support out of the box.  Build lightweight custom profiles with just the components you need.</p>
+    </div>
+    <div class='col-sm-6'>
+      <h3>Easy to Customize and Extend</h3>
+      <img src='/theme/img/popup.png' width="102" height="84" class='thumb' alt="customizable">
+      <p>Style your map controls with straight-forward CSS. Hook into different levels of the API or use <a href="/3rd-party/">3rd party libraries</a> to customize and extend functionality.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <h1 class='topic col-sm-12'>Learn More</h1>
+  </div>
+  <div class='row'>
+    <div class='col-sm-6'>
+      <a href='/doc/quickstart.html'>
+        <h3><i class='fa fa-check'></i> Quick Start</h3>
+      </a>
+      <p>Seen enough already? Go here to get started.</p>
+    </div>
+    <div class='col-sm-6'>
+      <a href='/download/'>
+        <h3><i class='fa fa-download'></i> Get the Code</h3>
+      </a>
+      <p>Get the latest release or dig through the archives.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-sm-6'>
+      <a href='/doc/tutorials/'>
+        <h3><i class='fa fa-book'></i> Tutorials</h3>
+      </a>
+      <p>Spend time learning the basics and graduate up to advanced mapping techniques.</p>
+    </div>
+    <div class='col-sm-6'>
+      <a href='/workshop/'>
+        <h3><i class='fa fa-graduation-cap'></i> Workshop</h3>
+      </a>
+      <p>Want to learn OpenLayers hands-on? Get started with the workshop.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-sm-6'>
+      <a href='/en/latest/apidoc/'>
+        <h3><i class='fa fa-sitemap'></i> API Docs</h3>
+      </a>
+      <p>Browse through the API docs for details on code usage.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <h1 class='topic col-sm-12'>Older versions</h1>
+    <div class='col-sm-12'>
+      <p>In case you are not ready (yet) for the latest version of OpenLayers, we provide links to selected resources of older major versions of the software.</p>
+      <ul>
+        <li>Latest v6: <a href="https://github.com/openlayers/openlayers/releases/tag/v6.15.1">v6.15.1</a> released 2022-07-18 &mdash; <a href="/en/v6.15.1/doc/">docs</a>, <a href="/en/v6.15.1/apidoc/">API</a> &amp;  <a href="/en/v6.15.1/examples/">examples</a></li>
+        <li>Latest v5: <a href="https://github.com/openlayers/openlayers/releases/tag/v5.3.0">v5.3.0</a> released 2018-11-06 &mdash; <a href="/en/v5.3.0/doc/">docs</a>, <a href="/en/v5.3.0/apidoc/">API</a> &amp;  <a href="/en/v5.3.0/examples/">examples</a></li>
+        <li>Latest v4: <a href="https://github.com/openlayers/openlayers/releases/tag/v4.6.5">v4.6.5</a> released 2018-03-20 &mdash; <a href="/en/v4.6.5/doc/">docs</a>, <a href="/en/v4.6.5/apidoc/">API</a> &amp;  <a href="/en/v4.6.5/examples/">examples</a></li>
+        <li>Latest v3: <a href="https://github.com/openlayers/openlayers/releases/tag/v3.20.1">v3.20.1</a>, released 2016-12-12 &mdash; <a href="/en/v3.20.1/doc/">docs</a>, <a href="/en/v3.20.1/apidoc/">API</a> &amp;  <a href="/en/v3.20.1/examples/">examples</a></li>
+        <li>Latest v2: v2.13.1, released 2013-07-09 &mdash; you'll find everything you need on the <a href="./two/">2.x page</a></li>
+      </ul>
+      <p>Please consider upgrading to benefit from the latest features and bug fixes. Get better performance and usability for free by using recent versions of OpenLayers.</p>
+    </div>
+  </div>
+  <div class='row'>
+    <h1 class='topic col-sm-12'>Get Involved</h1>
+  </div>
+  <div class='row'>
+    <div class='col-sm-4'>
+      <a href='https://github.com/openlayers/openlayers'>
+        <h3><i class="fa fa-code-fork"></i> Fork the repo</h3>
+      </a>
+    </div>
+    <div class='col-sm-4'>
+      <a href='https://github.com/openlayers/openlayers/issues'>
+        <h3><i class="fa fa-bug"></i> Open a ticket</h3>
+      </a>
+    </div>
+    <div class='col-sm-4'>
+      <a href='http://stackoverflow.com/questions/tagged/openlayers'>
+        <h3><i class="fa fa-user"></i> Ask a question</h3>
+      </a>
+    </div>
+  </div>
+</div>
+<script src="./main.js"></script>
+
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

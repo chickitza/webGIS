@@ -1,0 +1,16 @@
+.center-obj{
+	text-align: center; /*让div内部文字居中*/
+	background-color: #fff;
+    border-color: black;
+    border: 1px solid #000;
+    padding: 20px 10px;
+	border-radius: 20px;
+	width: 300px;
+	height: 350px;
+	margin: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
