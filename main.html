@@ -47,14 +47,30 @@
                 zoom:10
             }),
         })
+        // http://localhost:8084/geoserver/wms?bbox=-130,24,-66,50&styles=population&Format=image/png&request=GetMap&layers=topp:states&width=550&height=250&srs=EPSG:4326
+        // http://localhost:8084/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=tasmania&bbox=143.83482400000003%2C-43.648056%2C148.47914100000003%2C-39.573891&width=768&height=673&srs=EPSG%3A4326&format=application/openlayers
         var sky_map_layer = new ol.layer.Tile({
             title: '天地图',
             source: new ol.source.XYZ({
                 url:""
             })
-        })
+        });
+        var tiled = new ol.layer.Tile({
+            visible: false,
+            source: new ol.source.TileWMS({
+                url: 'http://localhost:8084/geoserver/wms',
+                params: {'FORMAT': format, 
+                   'VERSION': '1.1.1',
+                   tiled: true,
+                    "LAYERS": 'tasmania',
+                    "exceptions": 'application/vnd.ogc.se_inimage',
+                tilesOrigin: 143.83482400000003 + "," + -43.648056
+                }
+            })
+        });
         // https://blog.csdn.net/long_Amber/article/details/110553202
-        map.addLayer(sky_map_layer);
+        map.addLayer(tiled);
+        map.getView().fit(bounds, map.getSize());
     </script>
 </body>
 </html>
