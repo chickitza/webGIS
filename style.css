@@ -14,3 +14,57 @@
 	right: 0;
 	bottom: 0;
 }
+
+/* 将容器的位置设置为固定，并将其固定在右下角 */
+#image-container {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	margin: 10px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-end;
+  }
+  
+  /* 创建一个用于包装每个图像的子容器 */
+  .image {
+	margin: 6px;
+	border:3px solid orange;
+  }
+  
+  /* 调整每个图像的大小和边距，以适应子容器 */
+  .image img {
+	width: 70px;
+	height: 70px;
+  }
+  #scale-line {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .scale-line-center {
+    text-align: center;
+  }
+
+  #rotate {
+	position: absolute;
+	top: 20px;
+	right: 30px;
+  }
+
+  .ol-mouse-position{
+	margin:0 auto;
+	left: 50%;
+    transform: translateX(-17%);
+  }
+  #overviewMap{
+	position: absolute;
+	bottom: 40px;
+	left: 0px;
+  }
+  .ol-mouse-position{
+	color:#470f06;
+	text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
+  }

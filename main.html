@@ -1,52 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team5 HomePage</title>
-    
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="script.js" type="text/javascript"></script>
     <script src="jquery-3.6.4.min.js" type="text/javascript"></script>
 
-    <script src="openlayers\en\latest\ol\dist\ol.js"></script>
-    <link rel="stylesheet" href="openlayers\theme\ol.css">
+    <link href="ol/ol.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/ol.js" type="text/javascript"></script>
 
-    <link rel="stylesheet" href="layui\css\layui.css">
-    <script src="layui\layui.js"></script>
+    <script src="layui\layui.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="layui/css/layui.css">
 </head>
-<script>
-    
-    
-    var name = getURLParameter('name');
-    var sex = getURLParameter('sex');
 
-    window.onload = function(){
-        $("#name").val(name);
-        $("#sex").val(sex);
-    }
-</script>
+
 <body>
     <script>
-        layui.use(['layer', 'form'], function(){
-          var layer = layui.layer
-          ,form = layui.form;
-          
-          layer.msg('Hello World');
+        layui.use(['layer', 'form'], function () {
+            var layer = layui.layer
+                , form = layui.form;
+
+            layer.msg('Welcome!');
         });
-        </script> 
+    </script>
+
     <input type="text" id="name" />
     <input type="text" id="sex" /><br>
-    <!-- <div id="map" class="map"></div>
-    <script>
-        var map = new ol.Map({
-            target:"map",
-            view:new ol.View({
-                center:ol.proj.transform([116.40, 39.97],"EPSG:4326","EPSG:3857"),
-                zoom:10
-            }),
+    <div id="map" style="width: 100%;height:95vh;"></div>
+    <div id="scale-line"></div>
+    <div id="rotate"></div>
+    <div id="overviewMap"></div>
+    <!-- 在页面的 body 元素中添加一个 id 为 "image-container" 的 div 容器 -->
+
+
+    <div id="image-container">
+        <div class="image" id="terrain">
+            <img src="img/terrain.png" alt="terrain">
+        </div>
+        <div class="image" id="image">
+            <img src="img/image.png" alt="image">
+        </div>
+        <div class="image" id="vector">
+            <img src="img/vector.png" alt="vector">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+
+        var name = getURLParameter('name');
+        var sex = getURLParameter('sex');
+
+        window.onload = function () {
+            $("#name").val(name);
+            $("#sex").val(sex);
+        }
+
+        var format = 'image/png';
+        var bounds = [143.83482400000003, -43.648056,
+            148.47914100000003, -39.573891];
+        var projection = new ol.proj.Projection({
+            code: 'EPSG:4326',
+            units: 'degrees',
+            axisOrientation: 'neu',
+            global: true
         });
-    </script> -->
+
+        // http://localhost:8084/geoserver/wms?bbox=-130,24,-66,50&styles=population&Format=image/png&request=GetMap&layers=topp:states&width=550&height=250&srs=EPSG:4326
+        // http://localhost:8084/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=tasmania&bbox=143.83482400000003%2C-43.648056%2C148.47914100000003%2C-39.573891&width=768&height=673&srs=EPSG%3A4326&format=application/openlayers
+        var key = 'a8d7c92a48a8fab75e06a1e3bbfe59ef';
+        key = 'cb9cbd9a91812d57ccef5cd25ebf7d5b';
+        var tianditu_layer1 = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'http://t0.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=' + key
+            })
+        });
+        var tianditu_layer2 = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'http://t0.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=' + key
+            })
+        });
+        var tianditu_layer3 = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                url: 'http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + key
+            })
+        });
+        var tiled = new ol.layer.Tile({
+            // visible: false,
+            source: new ol.source.TileWMS({
+                url: 'http://localhost:8084/geoserver/wms',
+                params: {
+                    'FORMAT': format,
+                    'VERSION': '1.1.1',
+                    tiled: true,
+                    "LAYERS": 'tasmania',
+                    //"exceptions": 'application/vnd.ogc.se_inimage',
+                    tilesOrigin: 143.83482400000003 + "," + -43.648056
+                }
+            }),
+            projection: 'EPSG:3857'
+        });
+        // https://blog.csdn.net/long_Amber/article/details/110553202
+        var map = new ol.Map({
+            target: 'map',
+            layers: [
+                tianditu_layer1,
+                tianditu_layer2,
+                tianditu_layer3,
+                tiled
+            ],
+            view: new ol.View({
+                center: [12730008, 3571714],
+                zoom: 10,
+                projection: 'EPSG:3857'
+            }),
+            controls: ol.control.defaults().extend([    // 往地图增加控件
+                new ol.control.ZoomSlider(), //滑块控件
+                new ol.control.ZoomToExtent({  //特定位置控件
+                    extent: [
+                        12704572, 3561551,//矩形左上角坐标
+                        12750396, 3586508 //矩形右下角坐标
+                    ],
+
+                }),
+                new ol.control.FullScreen(), //全屏控件
+                new ol.control.MousePosition({
+                    coordinateFormat: coordinateFormat,
+                    projection: 'EPSG:4326', // 地理坐标系
+                }),//坐标拾取控件1
+                new ol.control.OverviewMap({
+                    collasped: false,
+                    target:"overviewMap"
+                }), //鹰眼控件
+                new ol.control.ScaleLine({}), //比例尺控件
+                new ol.control.Rotate({
+                    autoHide: false,
+                    target: "rotate",
+                }),
+            ]),
+        });
+        // map.addLayer(tiled);
+        // map.addLayer(sky_map_layer);
+        // map.getView().fit(bounds, map.getSize());
+        var layer2Button = document.getElementById('terrain');
+        var layer1Button = document.getElementById('image');
+        var layer3Button = document.getElementById('vector');
+
+        // initialize
+        var border_style = "3px solid orange"
+        tianditu_layer1.setVisible(false);
+        layer1Button.style.border = "none";
+
+        layer1Button.onclick = function () {
+            tianditu_layer1.setVisible(true);
+            tianditu_layer2.setVisible(false);
+            layer2Button.style.border = "none";
+            layer1Button.style.border = border_style;
+        };
+
+        layer2Button.onclick = function () {
+            tianditu_layer2.setVisible(true);
+            tianditu_layer1.setVisible(false);
+            layer1Button.style.border = "none";
+            layer2Button.style.border = border_style;
+        };
+        layer3Button.onclick = function () {
+            tianditu_layer3.setVisible(!tianditu_layer3.getVisible());
+            if (tianditu_layer3.getVisible()) {
+                layer3Button.style.border = border_style;
+            } else {
+                layer3Button.style.border = "none";
+            }
+
+        };
+    </script>
 </body>
+
+
 </html>
