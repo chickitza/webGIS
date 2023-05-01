@@ -35,6 +35,7 @@
     <div id="scale-line"></div>
     <div id="rotate"></div>
     <div id="overviewMap"></div>
+    <div id="legend"></div>
     <!-- 在页面的 body 元素中添加一个 id 为 "image-container" 的 div 容器 -->
 
 
@@ -90,19 +91,20 @@
                 url: 'http://t0.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=' + key
             })
         });
+        var wmsSource = new ol.source.TileWMS({
+            url: 'http://114.132.63.66:8084/geoserver/wms',
+            params: {
+                'FORMAT': format,
+                'VERSION': '1.1.1',
+                tiled: true,
+                "LAYERS": 'track_layer',
+                //"exceptions": 'application/vnd.ogc.se_inimage',
+                tilesOrigin: 143.83482400000003 + "," + -43.648056
+            }
+        });
         var tiled = new ol.layer.Tile({
             // visible: false,
-            source: new ol.source.TileWMS({
-                url: 'http://114.132.63.66:8084/geoserver/wms',
-                params: {
-                    'FORMAT': format,
-                    'VERSION': '1.1.1',
-                    tiled: true,
-                    "LAYERS": 'tasmania',
-                    //"exceptions": 'application/vnd.ogc.se_inimage',
-                    tilesOrigin: 143.83482400000003 + "," + -43.648056
-                }
-            }),
+            source: wmsSource,
             projection: 'EPSG:3857'
         });
         // https://blog.csdn.net/long_Amber/article/details/110553202
@@ -135,7 +137,7 @@
                 }),//坐标拾取控件1
                 new ol.control.OverviewMap({
                     collasped: false,
-                    target:"overviewMap"
+                    target: "overviewMap"
                 }), //鹰眼控件
                 new ol.control.ScaleLine({}), //比例尺控件
                 new ol.control.Rotate({
@@ -144,12 +146,16 @@
                 }),
             ]),
         });
+
+
+
         // map.addLayer(tiled);
         // map.addLayer(sky_map_layer);
         // map.getView().fit(bounds, map.getSize());
         var layer2Button = document.getElementById('terrain');
         var layer1Button = document.getElementById('image');
         var layer3Button = document.getElementById('vector');
+
 
         // initialize
         var border_style = "3px solid orange"
@@ -178,6 +184,17 @@
             }
 
         };
+
+        var legendImg = new Image();
+        legendImg.src = 'http://114.132.63.66:8084/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=30&HEIGHT=20&LAYER=track_layer';
+        var legendDiv = document.getElementById('legend');
+        legendDiv.appendChild(legendImg);
+// legendImg.onload = function() {
+//   var legendWidth = legendImg.width;
+//   var legendHeight = legendImg.height;
+//   legendDiv.style.marginTop = -(legendHeight/2) + 'px';
+//   legendDiv.style.marginLeft = -(legendWidth/2) + 'px';
+// };
     </script>
 </body>
 
