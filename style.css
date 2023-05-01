@@ -1,9 +1,10 @@
-.center-obj{
-	text-align: center; /*让div内部文字居中*/
+.center-obj {
+	text-align: center;
+	/*让div内部文字居中*/
 	background-color: #fff;
-    border-color: black;
-    border: 1px solid #000;
-    padding: 20px 10px;
+	border-color: black;
+	border: 1px solid #000;
+	padding: 20px 10px;
 	border-radius: 20px;
 	width: 300px;
 	height: 350px;
@@ -25,46 +26,57 @@
 	flex-direction: row;
 	justify-content: flex-end;
 	align-items: flex-end;
-  }
-  
-  /* 创建一个用于包装每个图像的子容器 */
-  .image {
+}
+
+/* 创建一个用于包装每个图像的子容器 */
+.image {
 	margin: 6px;
-	border:3px solid orange;
-  }
-  
-  /* 调整每个图像的大小和边距，以适应子容器 */
-  .image img {
+	border: 3px solid orange;
+}
+
+/* 调整每个图像的大小和边距，以适应子容器 */
+.image img {
 	width: 70px;
 	height: 70px;
-  }
-  #scale-line {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .scale-line-center {
-    text-align: center;
-  }
+}
 
-  #rotate {
+#scale-line {
+	position: absolute;
+	bottom: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.scale-line-center {
+	text-align: center;
+}
+
+#rotate {
 	position: absolute;
 	top: 20px;
 	right: 30px;
-  }
+}
 
-  .ol-mouse-position{
-	margin:0 auto;
+.ol-mouse-position {
+	margin: 0 auto;
 	left: 50%;
-    transform: translateX(-17%);
-  }
-  #overviewMap{
+	transform: translateX(-17%);
+}
+
+#overviewMap {
 	position: absolute;
 	bottom: 40px;
 	left: 0px;
-  }
-  .ol-mouse-position{
-	color:#470f06;
+}
+
+.ol-mouse-position {
+	color: #470f06;
 	text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
-  }
+}
+
+#legend {
+	position: absolute;
+	top: 60px;
+	right: 10px;
+	border: 3px solid darkorange;
+}
