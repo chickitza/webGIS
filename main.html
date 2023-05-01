@@ -36,9 +36,10 @@
     <div id="rotate"></div>
     <div id="overviewMap"></div>
     <div id="legend"></div>
-    <!-- 在页面的 body 元素中添加一个 id 为 "image-container" 的 div 容器 -->
-
-
+    <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup-content"></div>
+    </div>
     <div id="image-container">
         <div class="image" id="terrain">
             <img src="img/terrain.png" alt="terrain">
@@ -185,16 +186,54 @@
 
         };
 
+        // Legend
         var legendImg = new Image();
-        legendImg.src = 'http://localhost:8084/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=30&HEIGHT=20&LAYER=track_layer';
+        legendImg.src = 'http://114.132.63.66:8084/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=30&HEIGHT=20&LAYER=track_layer';
         var legendDiv = document.getElementById('legend');
         legendDiv.appendChild(legendImg);
-// legendImg.onload = function() {
-//   var legendWidth = legendImg.width;
-//   var legendHeight = legendImg.height;
-//   legendDiv.style.marginTop = -(legendHeight/2) + 'px';
-//   legendDiv.style.marginLeft = -(legendWidth/2) + 'px';
-// };
+
+        // Pop Up
+        var vectorSource = new ol.source.Vector({
+  format: new ol.format.GeoJSON(),
+  url: function(extent) {
+    return 'http://114.132.63.66:8084/geoserver/wfs?service=WFS&' +
+        'version=1.1.1&request=GetFeature&typename=track_layer&' +
+        'outputFormat=application/json&srsname=EPSG:3857&' +
+        'bbox=' + extent.join(',') + ',EPSG:3857';
+  },
+  strategy: ol.loadingstrategy.bbox
+});
+
+var vectorLayer = new ol.layer.Vector({
+  source: vectorSource
+});
+
+map.addLayer(vectorLayer);
+map.on('singleclick', function(evt) {
+    console.log("b");
+  var feature = map.forEachFeatureAtPixel(evt.pixel,
+    function(feature, layer) {
+      return feature;
+    });
+  if (feature) {
+    console.log("a");
+    var properties = feature.getProperties();
+    var content = '<table class="table table-bordered">';
+    for (var key in properties) {
+      content += '<tr><th>' + key + '</th><td>' + properties[key] + '</td></tr>';
+    }
+    content += '</table>';
+    $(popup.getElement()).popover({
+      'placement': 'top',
+      'html': true,
+      'content': content
+    });
+    popup.setPosition(evt.coordinate);
+    $(popup.getElement()).popover('show');
+  }
+});
+
+
     </script>
 </body>
 
