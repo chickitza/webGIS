@@ -123,6 +123,17 @@
                 tilesOrigin: 143.83482400000003 + "," + -43.648056
             }
         });
+        var wmsSource = new ol.source.TileWMS({
+            url: 'http://114.132.63.66:8084/geoserver/wms',
+            params: {
+                'FORMAT': format,
+                'VERSION': '1.1.1',
+                tiled: true,
+                "LAYERS": 'track_layer',
+                //"exceptions": 'application/vnd.ogc.se_inimage',
+                tilesOrigin: 143.83482400000003 + "," + -43.648056
+            }
+        });
         var tiled = new ol.layer.Tile({
             // visible: false,
             source: wmsSource,
@@ -169,10 +180,14 @@
         });
 
 
+
+        // map.addLayer(tiled);
+        // map.addLayer(sky_map_layer);
         // map.getView().fit(bounds, map.getSize());
         var layer2Button = document.getElementById('terrain');
         var layer1Button = document.getElementById('image');
         var layer3Button = document.getElementById('vector');
+
 
 
         // initialize
