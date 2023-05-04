@@ -80,11 +80,11 @@
 	right: 10px;
 	border: 3px solid darkorange;
 }
-#popup {
+/* #popup {
 	background-color: white;
 	border: 1px solid black;
 	padding: 5px;
-  }
+  } */
 
   table {
 	border-collapse: collapse;
@@ -92,7 +92,7 @@
   
   td {
 	border: 1px solid black;
-	padding: 5px;
+	padding: 3px;
   }
   
   .circle {
@@ -131,4 +131,20 @@
 
   .mode_button{
 	width: 80px;
+  }
+
+  .mol-popup {
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.7);
+	border: 1px solid black;
+	
+	padding: 15px;
+	top: 0px;
+	left: 0px;
+  }
+  .mol-popup-closer {
+	text-decoration: none;
+	position: absolute;
+	top: 2px;
+	right: 8px;
   }

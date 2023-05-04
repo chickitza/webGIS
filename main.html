@@ -7,15 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team5 HomePage</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="script.js" type="text/javascript"></script>
-    <script src="jquery-3.6.4.min.js" type="text/javascript"></script>
 
     <link href="ol/ol.css" rel="stylesheet" type="text/css" />
     <script src="Scripts/ol.js" type="text/javascript"></script>
 
     <script src="layui\layui.js" type="text/javascript"></script>
     <link rel="stylesheet" href="layui/css/layui.css">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="script.js" type="text/javascript"></script>
+    <script src="jquery-3.6.4.min.js" type="text/javascript"></script>
+
 </head>
 
 
@@ -31,15 +33,12 @@
 
     <input type="text" id="name" />
     <input type="text" id="sex" /><br>
-    <div id="map" style="width: 100%;height:92vh;"></div>
+
+    <div id="map" style="width: 100%;height:95vh;"></div>
     <div id="scale-line"></div>
     <div id="rotate"></div>
     <div id="overviewMap"></div>
     <div id="legend"></div>
-    <!-- <div id="popup" class="ol-popup">
-        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-        <div id="popup-content"></div>
-    </div> -->
     <div id="image-container">
         <div class="image" id="terrain">
             <img src="img/terrain.png" alt="terrain">
@@ -55,11 +54,11 @@
             <div class="mode_change_button"><button id="json_mode" class="mode_button">JSON Mode</button></div>
         </div>
     </div>
-    <div class="circle"></div>
+    <!-- <div class="circle red"></div> -->
     <div id="legend2" class="table-legend" style="position: absolute;
 	top: 60px;
 	right: 10px;
-	border: 3px solid darkorange;">
+	border: 3px solid darkorange;background-color: rgba(255, 255, 255, 0.8);">
         <table>
             <tr>
                 <td><span class="circle red"></span> 徐欣蕾</td>
@@ -71,6 +70,10 @@
             </tr>
         </table>
     </div>
+    <div id="mpopup" class="mol-popup" hidden>
+        <a href="#" id="popup-closer" class="mol-popup-closer"></a>
+        <div id="popup_content">hello</div>
+      </div>
 
     <script type="text/javascript">
 
@@ -194,12 +197,14 @@
         var border_style = "3px solid orange"
         tianditu_layer1.setVisible(false);
         layer1Button.style.border = "none";
+        var base_map_mode = 'light';
 
         layer1Button.onclick = function () {
             tianditu_layer1.setVisible(true);
             tianditu_layer2.setVisible(false);
             layer2Button.style.border = "none";
             layer1Button.style.border = border_style;
+            base_map_mode='dark';
         };
 
         layer2Button.onclick = function () {
@@ -207,6 +212,7 @@
             tianditu_layer1.setVisible(false);
             layer1Button.style.border = "none";
             layer2Button.style.border = border_style;
+            base_map_mode = 'light';
         };
         layer3Button.onclick = function () {
             tianditu_layer3.setVisible(!tianditu_layer3.getVisible());
@@ -225,6 +231,9 @@
         legendDiv.appendChild(legendImg);
 
         // Pop Up
+        // Unfinished
+
+        // Read GeoJSON
         var vectorSource = new ol.source.Vector({
             format: new ol.format.GeoJSON(),
             url: function (extent) {
@@ -236,34 +245,35 @@
             strategy: ol.loadingstrategy.bbox
         });
 
-        var vectorLayer = new ol.layer.Vector({
-            source: vectorSource
-        });
+        // // Create vector layer
+        // var vectorLayer = new ol.layer.Vector({
+        //     source: vectorSource
+        // });
 
-        map.addLayer(vectorLayer);
-        map.on('singleclick', function (evt) {
-            console.log("b");
-            var feature = map.forEachFeatureAtPixel(evt.pixel,
-                function (feature, layer) {
-                    return feature;
-                });
-            if (feature) {
-                console.log("a");
-                var properties = feature.getProperties();
-                var content = '<table class="table table-bordered">';
-                for (var key in properties) {
-                    content += '<tr><th>' + key + '</th><td>' + properties[key] + '</td></tr>';
-                }
-                content += '</table>';
-                $(popup.getElement()).popover({
-                    'placement': 'top',
-                    'html': true,
-                    'content': content
-                });
-                popup.setPosition(evt.coordinate);
-                $(popup.getElement()).popover('show');
-            }
-        });
+        // map.addLayer(vectorLayer);
+        // map.on('singleclick', function (evt) {
+        //     console.log("b");
+        //     var feature = map.forEachFeatureAtPixel(evt.pixel,
+        //         function (feature, layer) {
+        //             return feature;
+        //         });
+        //     if (feature) {
+        //         console.log("a");
+        //         var properties = feature.getProperties();
+        //         var content = '<table class="table table-bordered">';
+        //         for (var key in properties) {
+        //             content += '<tr><th>' + key + '</th><td>' + properties[key] + '</td></tr>';
+        //         }
+        //         content += '</table>';
+        //         $(popup.getElement()).popover({
+        //             'placement': 'top',
+        //             'html': true,
+        //             'content': content
+        //         });
+        //         popup.setPosition(evt.coordinate);
+        //         $(popup.getElement()).popover('show');
+        //     }
+        // });
         // // 创建一个Vector图层对象
         // var vectorLayer = new ol.layer.Vector({
         //     source: new ol.source.Vector({
@@ -281,25 +291,35 @@
                 format: new ol.format.GeoJSON()
             })
         });
+        map.addLayer(vectorLayer);
 
-
+        // symbolize plan 1: CSS
         // 按属性“人”配置点状geojson数据的样式
         var styleFunction = function (feature) {
             var person = feature.get('人');
-            var color = 'white';
+            if(base_map_mode == 'light'){
+                var color = 'black';
+            }else{
+                var color = 'white';
+            }
+            
+            var radius = 8;
             if (person == '徐欣蕾') {
                 color = 'red';
+                radius = 5;
             } else if (person == '胡培焘') {
                 color = 'yellow';
+                radius = 5;
             } else if (person == '张扬') {
                 color = 'blue';
+                radius = 5;
             } else if (person == '方浩') {
                 color = 'green';
+                radius = 5;
             }
-            console.log(color);
             return new ol.style.Style({
                 image: new ol.style.Circle({
-                    radius: 5,
+                    radius: radius,
                     fill: new ol.style.Fill({ color: color })
                 })
             });
@@ -307,27 +327,120 @@
 
         // 设置Vector图层的样式函数
         vectorLayer.setStyle(styleFunction);
-        map.addLayer(vectorLayer);
 
+
+        // symbolize plan 2: SLD
+        // Load SLD file from URL
+//         var sldUrl = 'http://114.132.63.66:8080/webgis/tracing/data/groupByName.sld.txt';
+//         var format = new OpenLayers.Format.SLD();
+// OpenLayers.Request.GET({
+//     url: sldUrl,
+//     success: function(e) {
+//         var sld = format.read(e.responseXML || e.responseText);
+//         var style = sld.namedLayers["layer-name"].userStyles[0];
+//         var styleMap = new OpenLayers.StyleMap();
+//         styleMap.styles["default"] = style;
+//         vectorLayer.styleMap = styleMap;
+//     }
+// });
 
         // Switch between WMS and JSON
         var wms_mode = document.getElementById("wms_mode");
         var json_mode = document.getElementById("json_mode");
         var legend2 = document.getElementById("legend2");
-        wms_mode.onclick = function(){
+        wms_mode.onclick = function () {
             tiled.setVisible(true);
             vectorLayer.setVisible(false);
             legendDiv.hidden = false;
             legend2.hidden = true;
         };
-        json_mode.onclick = function(){
+        json_mode.onclick = function () {
             tiled.setVisible(false);
             vectorLayer.setVisible(true);
 
             legendDiv.hidden = true;
             legend2.hidden = false;
         };
-        wms_mode.onclick();
+        json_mode.onclick();
+
+
+
+// 创建一个矢量图层
+var vectorLayer1 = new ol.layer.Vector({
+  source: new ol.source.Vector()
+});
+
+// 创建一个样式函数
+var styleFunction1 = function(feature) {
+  return new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: feature.get('radius'), // 圆形的半径
+      fill: new ol.style.Fill({
+        color: feature.get('color') // 圆形的颜色
+      })
+    })
+  });
+};
+// 设置矢量图层的样式函数
+vectorLayer1.setStyle(styleFunction);
+
+// 将矢量图层添加到地图中
+map.addLayer(vectorLayer1);
+
+
+        // 创建一个弹出窗口
+var popup = document.getElementById('mpopup');
+// 添加点击事件监听器
+map.on('click', function(evt) {
+    vectorLayer1.getSource().clear();
+  // 获取点击的要素
+  var feature = map.forEachFeatureAtPixel(evt.pixel,
+    function(feature) {
+      return feature;
+    });
+  // 如果有要素被点击
+  if (feature) {
+    // 获取要素的属性
+    var properties = feature.getProperties();
+    // 设置弹出窗口的内容
+    var content = document.getElementById('popup_content');
+
+    content.innerHTML = '<p>这是一条轨迹记录</p>';
+    content.innerHTML += '<p>地点: ' + properties.地点 + '</p>';
+    content.innerHTML += '<p>人: ' + properties.人 + '</p>';
+    content.innerHTML += '<p>日期: ' + properties.日期 + '</p>';
+       popup.hidden = false; 
+    popup.style.left = evt.pixel[0]-popup.clientWidth/2+'px';
+    popup.style.top = evt.pixel[1]-popup.clientHeight+'px';
+
+
+    
+// 获取点击的坐标
+var coordinate = feature.values_.geometry.flatCoordinates;
+  // 创建一个圆形几何对象
+  var circle = new ol.geom.Point(coordinate); // 半径为100米
+  // 创建一个圆形要素
+  var circleFeature = new ol.Feature(circle);
+  circleFeature.set('人', 'unknown');
+  // 将圆形要素添加到矢量图层中
+  vectorLayer1.getSource().addFeature(circleFeature);
+
+
+  // 创建一个圆形几何对象
+    var circle1 = new ol.geom.Point(coordinate); // 半径为100米
+  // 创建一个圆形要素
+  var circleFeature1 = new ol.Feature(circle1);
+  // 设置圆形要素的属性
+  circleFeature1.set('人', properties.人);
+  circleFeature1.set('地点', properties.地点);
+  circleFeature1.set('日期', properties.日期);
+  // 将圆形要素添加到矢量图层中
+  vectorLayer1.getSource().addFeature(circleFeature1);
+
+  }else{
+    popup.hidden = true;
+  }
+});
     </script>
 </body>
 
