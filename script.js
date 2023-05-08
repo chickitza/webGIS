@@ -91,3 +91,14 @@ function createMeasureTooltip() {
     });
     map.addOverlay(measureTooltip);
 }
+
+function  clearmea(){
+  var meas = document.getElementsByTagName('div')
+  for(var i=0; i<meas.length-1;i++){
+    // 遍历所有的div并根据id做判断
+    if(meas[i].getAttribute('id') == 'ol-tooltip ol-tooltip-measure'){
+      // 对满足条件的标签设置属性即可
+        meas[i].remove();
+    }
+  }
+}

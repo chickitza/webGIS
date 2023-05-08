@@ -29,8 +29,8 @@
         });
     </script>
 
-    <input type="text" id="name" />
-    <input type="text" id="sex" /><br>
+    <!-- <input type="text" id="name" />
+    <input type="text" id="sex" /><br> -->
     <div class="row">
         <div class="col-auto">
             <span class="input-group">
@@ -42,11 +42,12 @@
                     <option value="Polygon">Polygon</option>
                     <option value="Circle">Circle</option>
                 </select>
-                <button id="Clear" class="mode_button">Clear</button>
+                <button id="Clear" class="button">-Clear-</button>
+                <button id="StopMeasure" class="button">-Stop Measure-</button>
             </span>
         </div>
     </div>
-    <div id="map" style="width: 100%;height:92vh;"></div>
+    <div id="map" style="width: 100%;height:97vh;"></div>
     <div id="scale-line"></div>
     <div id="rotate"></div>
     <div id="overviewMap"></div>
@@ -354,6 +355,7 @@
         const typeSelect = document.getElementById('Drawtype');
 
         var draw; // global so we can remove it later
+
         function addInteraction() {
             const value = typeSelect.value;
             if (value !== 'None') {
@@ -427,17 +429,22 @@
 
         var ClearButton = document.getElementById("Clear");
         ClearButton.onclick = function () {
-            var mea = document.getElementById('ol-tooltip ol-tooltip-measure');
             DrawLayer.getSource().clear();
-            mea.parentNode.removeChild(mea);
-            measureTooltipElement.innerHTML = "";
+            clearmea();
+        }
+
+        var StopButton = document.getElementById("StopMeasure");
+        StopButton.onclick = function () {
+            typeSelect.value = "None";
+            map.removeInteraction(draw);
+            addInteraction();
         }
 
         // Switch between WMS and JSON
         var wms_mode = document.getElementById("wms_mode");
         var json_mode = document.getElementById("json_mode");
         var legend2 = document.getElementById("legend2");
-        
+
         wms_mode.onclick = function () {
             tiled.setVisible(true);
             vectorLayer.setVisible(false);
@@ -466,7 +473,7 @@
                     radius: feature.get('radius'), // 圆形的半径
                     fill: new ol.style.Fill({
                         color: feature.get('color') // 圆形的颜色
-                    })
+                    }),
                 })
             });
         };
@@ -482,53 +489,71 @@
         // 添加点击事件监听器
         map.on('click', function (evt) {
             vectorLayer1.getSource().clear();
-            // 获取点击的要素
-            var feature = map.forEachFeatureAtPixel(evt.pixel,
-                function (feature) {
-                    return feature;
-                });
-            // 如果有要素被点击
-            if (feature) {
-                // 获取要素的属性
-                var properties = feature.getProperties();
-                // 设置弹出窗口的内容
-                var content = document.getElementById('popup_content');
+            if (typeSelect.value == 'None') {
+                // 获取点击的要素
+                var feature = map.forEachFeatureAtPixel(evt.pixel,
+                    function (feature) {
+                        return feature;
+                    });
+                // 如果有要素被点击
+                if (feature) {
+                    // 获取要素的属性
+                    var properties = feature.getProperties();
+                    if (!feature.values_.人) { }
+                    else {// 设置弹出窗口的内容
+                        var content = document.getElementById('popup_content');
 
-                content.innerHTML = '<p>这是一条轨迹记录</p>';
-                content.innerHTML += '<p>地点: ' + properties.地点 + '</p>';
-                content.innerHTML += '<p>人: ' + properties.人 + '</p>';
-                content.innerHTML += '<p>日期: ' + properties.日期 + '</p>';
-                popup.hidden = false;
-                popup.style.left = evt.pixel[0] - popup.clientWidth / 2 + 'px';
-                popup.style.top = evt.pixel[1] - popup.clientHeight + 'px';
+                        content.innerHTML = '<p>这是一条轨迹记录</p>';
+                        content.innerHTML += '<p>地点: ' + properties.地点 + '</p>';
+                        content.innerHTML += '<p>人: ' + properties.人 + '</p>';
+                        const timestamp = properties.日期; // 时间戳
+
+                        const date = new Date(timestamp); // 将时间戳转换为日期对象
+
+                        const year = date.getFullYear(); // 获取年份
+                        const month = date.getMonth() + 1; // 获取月份（注意要加 1，因为 getMonth 返回的是 0 到 11）
+                        const day = date.getDate(); // 获取日期
+
+                        const formattedDate = year + '-' + month + '-' + day; // 将年月日格式化为字符串（可以根据需要调整格式）
+
+                        content.innerHTML += '<p>日期: ' + formattedDate + '</p>';
+                        popup.hidden = false;
+                        popup.style.left = evt.pixel[0] - popup.clientWidth / 2 + 'px';
+                        popup.style.top = evt.pixel[1] - popup.clientHeight + 'px';
 
 
 
-                // 获取点击的坐标
-                var coordinate = feature.values_.geometry.flatCoordinates;
-                // 创建一个圆形几何对象
-                var circle = new ol.geom.Point(coordinate); // 半径为100米
-                // 创建一个圆形要素
-                var circleFeature = new ol.Feature(circle);
-                circleFeature.set('人', 'unknown');
-                // 将圆形要素添加到矢量图层中
-                vectorLayer1.getSource().addFeature(circleFeature);
+                        // 获取点击的坐标
+                        var coordinate = feature.values_.geometry.flatCoordinates;
+                        // 创建一个圆形几何对象
+                        var circle = new ol.geom.Point(coordinate); // 半径为100米
+                        // 创建一个圆形要素
+                        var circleFeature = new ol.Feature(circle);
+                        circleFeature.set('人', 'undefined');
+                        // 将圆形要素添加到矢量图层中
+                        vectorLayer1.getSource().addFeature(circleFeature);
 
 
-                // 创建一个圆形几何对象
-                var circle1 = new ol.geom.Point(coordinate); // 半径为100米
-                // 创建一个圆形要素
-                var circleFeature1 = new ol.Feature(circle1);
-                // 设置圆形要素的属性
-                circleFeature1.set('人', properties.人);
-                circleFeature1.set('地点', properties.地点);
-                circleFeature1.set('日期', properties.日期);
-                // 将圆形要素添加到矢量图层中
-                vectorLayer1.getSource().addFeature(circleFeature1);
+                        // 创建一个圆形几何对象
+                        var circle1 = new ol.geom.Point(coordinate); // 半径为100米
+                        // 创建一个圆形要素
+                        var circleFeature1 = new ol.Feature(circle1);
+                        // 设置圆形要素的属性
+                        circleFeature1.set('人', properties.人);
+                        circleFeature1.set('地点', properties.地点);
+                        circleFeature1.set('日期', properties.日期);
+                        // 将圆形要素添加到矢量图层中
+                        vectorLayer1.getSource().addFeature(circleFeature1);
+                    }
 
-            } else {
+                } else {
+                    popup.hidden = true;
+                }
+            }
+            else {
                 popup.hidden = true;
             }
+
         });
     </script>
 </body>
